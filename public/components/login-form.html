@@ -1,0 +1,44 @@
+<div data-jc-scope="?" class="hidden" data-jc-class="hidden">
+
+    <div data-jc="visible" data-jc-path="response" data-jc-config="if:value && value.success === true" class="hidden">
+        <div class="message-success"><span class="fa fa-check-circle"></span>Login successfull.</div>
+        <br />
+    </div>
+
+    <div data-jc="visible" data-jc-path="response" data-jc-config="if:!value || !value.success">
+        <div class="row">
+            <div class="col-md-6 m">
+                <div data-jc="textbox" data-jc-path="email" data-jc-value="'@'" data-jc-config="required:true">Email</div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12 m">
+                <div data-jc="textbox" data-jc-path="password" data-jc-value="''" data-jc-config="required:true;type:password">Password</div>
+            </div>
+        </div>
+        <div data-jc="error" data-jc-path="response"></div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div data-jc="validation" data-jc-path="?">
+                    <button class="button exec" name="submit" disabled="disabled" data-exec="loginformsubmit">LOGIN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    //TODO
+
+    !window.loginformsubmit && (window.loginformsubmit = function(el) {
+        var component = el.closest('[data-jc-path]').component();
+        var scope = component.pathscope;
+        if (CAN(scope + '.*')) {
+            RESET(scope + '.*');
+            AJAX('POST /api/articles/', GET(scope), scope + '.response');
+        }
+    });
+</script>

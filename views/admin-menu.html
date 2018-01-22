@@ -1,0 +1,12 @@
+@{title('Administration')}
+
+<h1>@{title}</h1>
+
+@{foreach item in model.data.items}
+    <div class="row">
+        <div class="col-md-4 col-sm-4 m">
+            <div>@{item.id}</div>
+            <h2>@{item.title}</h2>
+        </div>
+    </div>
+@{end}

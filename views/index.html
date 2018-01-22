@@ -1,0 +1,22 @@
+@{title('Blog CMS system')}
+
+<h1>@{title}</h1>
+
+@{foreach row in [0, 1, 2]}
+    <div class="row">
+        @{foreach column in [0, 1, 2]}
+            <div class="col-md-4 col-sm-4 m">
+
+                @{model.item = model.data.items[row+column+(row*3)]}
+                @{model.imgsrc = '/img/00' + (column+1) + '.jpg'}
+                @{model.href = '/article/' + model.item['id']}
+                <a href=@{model.href}>
+                    <img src=@{model.imgsrc} border="0" alt="Eshop" class="img-responsive img-rounded" />
+                    <h3>@{model.item['title']}</h3>
+                </a>
+            </div>
+        @{end}
+    </div>
+@{end}
+
+<br />
