@@ -4,6 +4,7 @@
 	"version": "1.0.0",
 	"main": "debug.js",
 	"dependencies": {
+		"password-hash": "^1.2.2",
 		"total.js": "^2.9.2"
 	},
 	"scripts": {

@@ -1,12 +1,43 @@
 @{title('Administration')}
 
 <h1>@{title}</h1>
+<div class="row">
+    <div class="col-md-2 col-sm-2 m">
+        <p><a href="/article/new/"><i class="fa fa-plus" aria-hidden="true"></i> New article</a></p>
+    </div>
+</div>
 
 @{foreach item in model.data.items}
     <div class="row">
         <div class="col-md-4 col-sm-4 m">
-            <div>@{item.id}</div>
-            <h2>@{item.title}</h2>
+            @{model.href = '/article/' + item.id}
+            @{model.del = 'deleteItem(\'' + item.id + '\')'}
+            @{model.edit = 'editItem(\'' + item.id + '\')'}
+
+            <script>document.write(convertTimestamp(@{item.timestamp}))</script>
+            <h2><a href=@{model.href}>@{item.title}</a></h2>
+            <div>
+                <span onclick=@{model.edit} style="cursor: pointer;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Edit &nbsp;</span>
+                <span onclick=@{model.del} style="cursor: pointer;"><i class="fa fa-trash" aria-hidden="true"></i>Delete</span>
+            </div>
         </div>
     </div>
 @{end}
+
+<script>
+    window.deleteItem = function(itemId) {
+        // Confirmation dialog
+        if (confirm("Delete item?")) {
+
+            // If OK, than delete item and reload page
+            AJAX('DELETE /api/articles/' + itemId);
+            window.location.reload(true);
+            window.location.reload(false);//TODO
+        }
+
+    };
+
+    window.editItem = function(itemId) {
+        window.location.replace('/article/edit/' + itemId);
+    };
+</script>

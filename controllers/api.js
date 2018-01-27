@@ -1,10 +1,15 @@
 exports.install = function() {
 
-    //       URL 		        Handler Flags			        Method
+    //URL 		                Handler Flags			        Method
     ROUTE('/api/articles',      query,  ['*Article']);          // GET (default)
     ROUTE('/api/articles/{id}', get,    ['*Article']);          // GET (default)
     ROUTE('/api/articles',      save,   ['*Article', 'POST']);  // POST
     ROUTE('/api/articles/{id}', remove, ['*Article', 'DELETE']);// DELETE
+
+    ROUTE('/api/users/',        query,  ['*User']);             // GET (default)
+    ROUTE('/api/users/{id}',    get,    ['*User']);             // GET (default)
+    ROUTE('/api/users',         save,   ['*User', 'POST']);     // POST
+    ROUTE('/api/users/{id}',    remove, ['*User', 'DELETE']);   // DELETE
 
 };
 

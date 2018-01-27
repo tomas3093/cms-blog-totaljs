@@ -1,7 +1,11 @@
 NEWSCHEMA('Article').make(function(schema) {
 
+    schema.define('id', String);
     schema.define('title', String, true);
+    schema.define('description', String, true);
     schema.define('text', String, true);
+    schema.define('imgpath', String);
+    schema.define('timestamp', Number);
 
     // Query products
     schema.setQuery(function(error, options, callback) {
@@ -27,7 +31,8 @@ NEWSCHEMA('Article').make(function(schema) {
         filter.take(take);
         filter.skip(skip);
 
-        if(options.sort) filter.sort(options.sort);
+        //if(options.sort) filter.sort(options.sort);
+        filter.sort('timestamp', true);
 
         filter.callback(function(err, res, count) {
 
@@ -63,17 +68,33 @@ NEWSCHEMA('Article').make(function(schema) {
         // if there's no id then it's an insert otherwise update
         var isNew = model.id ? false : true;
 
-        // create id if it's new
-        if(isNew) model.id = UID(); //UID returns string such as 16042321110001yfg
+        // create other attributes
+        model.timestamp = Date.now();
 
-        NOSQL('articles')
-            .upsert(model) // update or insert
-            .where('id', model.id)
-            .callback(function() {
+        if(isNew) {
+            model.id = UID();
+            model.imgpath = '' + model.id + '.jpg';
 
-                callback({success: true, id: model.id});
+            // Insert to DB
+            NOSQL('articles')
+                .insert(model)
+                .callback(function() {
 
-            });
+                    callback({success: true, id: model.id});
+
+                });
+        } else {
+
+            // Update old article in DB
+            NOSQL('articles')
+                .update(model)
+                .where('id', model.id)
+                .callback(function() {
+
+                    callback({success: true, id: model.id});
+
+                });
+        }
     });
 
     // Remove a specific article

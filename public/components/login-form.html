@@ -31,14 +31,11 @@
 
 <script>
 
-    //TODO
-
     !window.loginformsubmit && (window.loginformsubmit = function(el) {
         var component = el.closest('[data-jc-path]').component();
-        var scope = component.pathscope;
-        if (CAN(scope + '.*')) {
-            RESET(scope + '.*');
-            AJAX('POST /api/articles/', GET(scope), scope + '.response');
-        }
+        var fields = GET(component.pathscope);
+        var params = { email: fields.email, password: fields.password };
+
+        post('/login/', params);
     });
 </script>

@@ -1,1 +1,45 @@
-sign up form
+<div data-jc-scope="?" class="hidden" data-jc-class="hidden">
+
+    <div data-jc="visible" data-jc-path="response" data-jc-config="if:value && value.success === true" class="hidden">
+        <div class="message-success"><span class="fa fa-check-circle"></span>Registration successful.</div>
+        <br />
+    </div>
+    <div data-jc="visible" data-jc-path="response" data-jc-config="if:value && value.success !== true" class="hidden">
+        <div class="message-error"><span class="fa fa-exclamation-triangle"></span>Registration failed.</div>
+        <br />
+    </div>
+
+    <div data-jc="visible" data-jc-path="response" data-jc-config="if:!value || !value.success">
+        <div class="row">
+            <div class="col-md-6 m">
+                <div data-jc="textbox" data-jc-path="email" data-jc-value="'@'" data-jc-config="required:true">Email</div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12 m">
+                <div data-jc="textbox" data-jc-path="password" data-jc-value="''" data-jc-config="required:true;type:password">Password</div>
+            </div>
+        </div>
+        <div data-jc="error" data-jc-path="response"></div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div data-jc="validation" data-jc-path="?">
+                    <button class="button exec" name="submit" disabled="disabled" data-exec="signupformsubmit">SIGN UP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    !window.signupformsubmit && (window.signupformsubmit = function(el) {
+        var component = el.closest('[data-jc-path]').component();
+        var scope = component.pathscope;
+        if (CAN(scope + '.*')) {
+            RESET(scope + '.*');
+            AJAX('POST /api/users/', GET(scope), scope + '.response');
+        }
+    });
+</script>

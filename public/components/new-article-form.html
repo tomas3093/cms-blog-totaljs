@@ -8,13 +8,19 @@
     <div data-jc="visible" data-jc-path="response" data-jc-config="if:!value || !value.success">
         <div class="row">
             <div class="col-md-6 m">
-                <div data-jc="textbox" data-jc-path="title" data-jc-value="''" data-jc-config="required:true">Title</div>
+                <div data-jc="textbox" data-jc-path="title" data-jc-value="``" data-jc-config="required:true">Title</div>
             </div>
         </div>
         <br />
         <div class="row">
             <div class="col-md-12 m">
-                <div data-jc="textarea" data-jc-path="text" data-jc-value="''" data-jc-config="height:100;required:true">Text</div>
+                <div data-jc="textbox" data-jc-path="description" data-jc-value="``" data-jc-config="height:60;required:true">Description</div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12 m">
+                <div data-jc="textarea" data-jc-path="text" data-jc-value="``" data-jc-config="height:150;required:true">Text</div>
             </div>
         </div>
         <div data-jc="error" data-jc-path="response"></div>

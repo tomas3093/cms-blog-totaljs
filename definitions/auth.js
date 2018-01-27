@@ -1,4 +1,3 @@
-/**
 // This object will contain all online users (their sessions)
 const ONLINE = {};
 
@@ -34,39 +33,42 @@ F.onAuthorize = function(req, res, flags, callback) {
     }
 
     // Session doesn't exist here, so we try to sign-in user because we have his ID
-    var sql = DB();
+    var options = {
+        hostname: '127.0.0.1',
+        port: 8000,
+        path: '/api/users/' + cookie.id + '/',
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    };
 
-    sql.select('user', 'tbl_user').make(function(filter) {
-        filter.where('id', cookie.id);
-        filter.where('blocked', false);
-        filter.where('confirmed', true);
-        filter.where('removed', false);
-        filter.first();
+    // AJAX Request to API
+    var http = require('http');
+    http.request(options, function(res) {
+        res.setEncoding('utf8');
+        res.on('data', function (data) {
 
-        // User session will contain these properties:
-        filter.fields('id', 'name', 'photo');
-    });
+            var json = JSON.parse(data);
 
-    sql.exec(function(err, response) {
+            // If user exists in DB
+            if (json.success === true) {
+                var user = json.data;
 
-        // Check whether the user exists in DB
-        if (err || !response.user) {
-            // If not, then remove the cookie
-            res.cookie(COOKIE, '', '-1 day');
-            return callback(false);
-        }
+                // We have the user so we can set the current timestamp (for his expiration)
+                user.ticks = F.datetime;
 
-        var user = response.user;
+                // Create a session
+                ONLINE[user.id] = user;
 
-        // We have the user so we can set the current timestamp (for his expiration)
-        user.ticks = F.datetime;
-
-        // Create a session
-        ONLINE[user.id] = user;
-
-        // Authorize the user
-        callback(true, user);
-    });
+                // Authorize the user
+                callback(true, user);
+            }
+            else {
+                // If user not exists, then remove the cookie
+                res.cookie(COOKIE, '', '-1 day');
+                return callback(false);
+            }
+        });
+    }).end();
 };
 
 // A simple service cleaner for expired sessions
@@ -102,11 +104,13 @@ F.userlogin = function(controller, id) {
     // user.ip = controller.ip;
 
     controller.cookie(COOKIE, F.encrypt(user, SECRET), '7 days');
+
     return F;
 };
 
 // The method removes auth cookie
 F.userlogoff = function(controller) {
     controller.cookie(COOKIE, '', '-1 day');
+
     return F;
-};*/
+};
